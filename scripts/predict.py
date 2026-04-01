@@ -38,11 +38,10 @@ except Exception as e:
 # ─────────────────────────────────────────
 # FETCH DATA
 # ─────────────────────────────────────────
-
 query = """
     SELECT * FROM sensor_data
     ORDER BY RANDOM()
-    LIMIT 100
+    LIMIT 10000
 """
 df = pd.read_sql_query(query, conn)
 print(f"[LOAD] {df.shape[0]} rows loaded from PostgreSQL.")
@@ -50,23 +49,23 @@ print(f"[LOAD] {df.shape[0]} rows loaded from PostgreSQL.")
 # ─────────────────────────────────────────
 # PREPROCESS DATA
 # ─────────────────────────────────────────
-# dominant features
-df["temp_difference"] = df["process_temperature_k"] - df["air_temperature_k"]
-df["power"] = (df["torque_nm"] * df["rotational_speed_rpm"]) / 9550
+# domain features
+df["temp_difference"]   = df["process_temperature_k"] - df["air_temperature_k"]
+df["power"]             = (df["torque_nm"] * df["rotational_speed_rpm"]) / 9550
 df["torque_wear_ratio"] = df["torque_nm"] / (df["tool_wear_min"] + 1)
 
 # remove features that won't be used for prediction
 X = df.drop(columns=["machine_failure", "id", "inserted_at", "twf", "hdf", "pwf", "osf", "rnf"])
 
-# apllying scaler
+# applying scaler
 X_scaled = scaler.transform(X)
 print(f"[FEATURES] Features prepared and scaled successfully.")
 
 # ─────────────────────────────────────────
 # MAKE PREDICTIONS
 # ─────────────────────────────────────────
-y_prob = modelo.predict_proba(X_scaled)[:, 1]  #Positive class probability
-y_pred = (y_prob >= 0.3).astype(int)  # Convert probabilities to binary predictions using a threshold of 0.3
+y_prob = modelo.predict_proba(X_scaled)[:, 1]
+y_pred = (y_prob >= 0.3).astype(int)
 print(f"[PREDICT] {y_pred.sum()} failures predicted out of {len(y_pred)} records.")
 
 # ─────────────────────────────────────────
@@ -74,7 +73,11 @@ print(f"[PREDICT] {y_pred.sum()} failures predicted out of {len(y_pred)} records
 # ─────────────────────────────────────────
 try:
     cursor = conn.cursor()
- 
+
+    # clear previous predictions before inserting new ones
+    cursor.execute("TRUNCATE TABLE predictions RESTART IDENTITY;")
+    print("[DB] Predictions table cleared.")
+
     values = [
         (
             int(df.iloc[i]["id"]),
