@@ -10,6 +10,20 @@ This project simulates a real-world predictive maintenance system using sensor d
 
 The system was built to demonstrate a full data pipeline — from raw data ingestion to a Power BI dashboard with failure alerts.
 
+In a real factory environment, the pipeline would be scheduled to run daily — ingesting new sensor readings, generating updated predictions, and refreshing the dashboard automatically to support maintenance decisions in near real-time.
+
+---
+
+## 📈 Power BI Dashboard
+
+Two-page dashboard connected directly to PostgreSQL:
+
+**Page 1 — Overview**
+![Overview](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/overview.png)
+
+**Page 2 — Alert Panel**
+![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/alert_panel.png)
+
 ---
 
 ## 🗂️ Project Structure
@@ -36,6 +50,10 @@ predictive_ML/
 ├── models/
 │   ├── random_forest_model.pkl       # Trained Random Forest model
 │   └── scaler.pkl                    # Fitted StandardScaler
+│
+├── BI_pictures/
+│   ├── overview.png
+│   └── alert_panel.png
 │
 ├── .env                              # Credentials (not versioned)
 ├── .gitignore
@@ -90,7 +108,7 @@ predictive_ML/
 - Read data directly from PostgreSQL
 - Created domain-driven features:
   - `temp_difference` = process_temperature_k − air_temperature_k
-  - `power` = (torque_nm × rotational_speed_rpm) / 9550 _(kW)_
+  - `power` = (torque*nm × rotational_speed_rpm) / 9550 *(kW)\_
   - `torque_wear_ratio` = torque_nm / (tool_wear_min + 1)
 - Excluded fault sub-type columns (TWF, HDF, PWF, OSF, RNF) to prevent **data leakage**
 - Applied `StandardScaler` and saved as `scaler.pkl`
@@ -135,32 +153,12 @@ predictions     -- model output with failure_probability and predicted_failure
 
 ---
 
-## 📈 Power BI Dashboard
-
-Two-page dashboard connected directly to PostgreSQL:
-
-**Page 1 — Overview**
-
-- Total sensor readings analyzed
-- Total predicted failures
-- Failures by machine quality (Low / Medium / High)
-- Torque vs RPM scatter plot colored by predicted failure
-
-**Page 2 — Alert Panel**
-
-- ⚠️ Machine Failure Alert Panel header
-- Table of machines at risk with sensor values
-- Machines at Risk counter (334)
-- Mean failure probability gauge (0.84)
-
----
-
 ## 🚀 How to Run
 
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/predictive_ML.git
+git clone https://github.com/alan-colli/predictive_ML.git
 cd predictive_ML
 ```
 
@@ -228,16 +226,3 @@ pip freeze > requirements.txt
 - **Simplifying architecture** (dropping medallion layers) was the right call for a project of this scope
 
 ---
-
-## 📝 Next Steps
-
-- [ ] Integrate Ollama LLM for automated failure reports (deferred due to CPU-only hardware)
-- [ ] Add neural network model as an upgrade to Random Forest
-- [ ] Schedule `predict.py` to run automatically (Windows Task Scheduler or cron)
-- [ ] Add real-time sensor data simulation
-
----
-
-## 📄 License
-
-This project uses the AI4I 2020 dataset licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
