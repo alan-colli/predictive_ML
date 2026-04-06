@@ -24,6 +24,9 @@ Two-page dashboard connected directly to PostgreSQL:
 **Page 2 — Alert Panel**
 ![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/alert_panel.png)
 
+**Page 3 — Selected Machine**
+![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/selected_machine.png)
+
 ---
 
 ## 🗂️ Project Structure
