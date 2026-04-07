@@ -22,7 +22,7 @@ Two-page dashboard connected directly to PostgreSQL:
 ![Overview](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/overview.png)
 
 **Page 2 — Alert Panel**
-![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/alert_panel.png)
+![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/alert.png)
 
 **Page 3 — Selected Machine**
 ![Alert Panel](https://raw.githubusercontent.com/alan-colli/predictive_ML/main/BI_pictures/selected_machine.png)
