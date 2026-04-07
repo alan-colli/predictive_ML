@@ -228,4 +228,6 @@ pip freeze > requirements.txt
 - **Domain knowledge** (engineering background) directly informed feature engineering choices — power, torque/wear ratio, temperature delta
 - **Simplifying architecture** (dropping medallion layers) was the right call for a project of this scope
 
+Synthetic dataset — learned patterns may not reflect real-world industrial machine behavior.
+
 ---
